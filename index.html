@@ -89,17 +89,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
 <body>
 <div class="header"><span style="font-size:24px">&#x1F6D2;</span><h1>Shopee Post Generator</h1></div>
 <div class="container">
-  <div class="section" id="apiSection">
-    <h2>&#x1F511; Buoc 1: Gemini API Key</h2>
-    <div class="api-row">
-      <input type="password" id="apiKeyInput" placeholder="Paste API key tu aistudio.google.com...">
-      <button class="btn btn-primary" onclick="saveApiKey()">Luu</button>
-      <button class="btn btn-outline" onclick="copyDefaultKey()" id="copyKeyBtn" title="Copy key mac dinh de dung ngay">&#x1F4CB; Copy key</button>
-    </div>
-    <p style="font-size:11px;color:#999;margin-top:8px">Co san key mac dinh. Nhan "Copy key" roi Ctrl+V vao o tren, hoac tu tao key tai <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a></p>
-  </div>
   <div class="section" id="inputSection">
-    <h2>&#x1F4C1; Buoc 2: Nhap san pham</h2>
+    <h2>&#x1F4C1; Nhap san pham</h2>
     <div class="tabs">
       <div class="tab active" onclick="switchTab('csv')">&#x1F4C4; Upload CSV</div>
       <div class="tab" onclick="switchTab('links')">&#x1F517; Paste Link</div>
@@ -177,25 +168,7 @@ let generatedPosts=[];
 
 document.addEventListener('DOMContentLoaded',()=>{
   try{const s=localStorage.getItem('gemini_api_key');apiKey=s||DEFAULT_KEY}catch(e){apiKey=DEFAULT_KEY}
-  const d=(!apiKey||apiKey===DEFAULT_KEY)?'(Mac dinh - san sang dung)':'\u2022'.repeat(12)+apiKey.slice(-4);
-  document.getElementById('apiKeyInput').value=d;
-  document.getElementById('apiSection').querySelector('h2').innerHTML='&#x1F511; Buoc 1: API Key &#x2705;';
 });
-
-function saveApiKey(){
-  const k=document.getElementById('apiKeyInput').value.trim();
-  if(!k||k.startsWith('\u2022')||k==='(Mac dinh)')return;
-  apiKey=k;try{localStorage.setItem('gemini_api_key',k)}catch(e){}
-  document.getElementById('apiKeyInput').value='\u2022'.repeat(12)+k.slice(-4);
-  document.getElementById('apiSection').querySelector('h2').innerHTML='&#x1F511; Buoc 1: API Key &#x2705;';
-}
-
-function copyDefaultKey(){
-  navigator.clipboard.writeText(DEFAULT_KEY).then(()=>{
-    const b=document.getElementById('copyKeyBtn');
-    b.textContent='Da copy!';setTimeout(()=>{b.innerHTML='&#x1F4CB; Copy key'},2000);
-  });
-}
 
 function switchTab(tab){
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='csv'?0:1)));
