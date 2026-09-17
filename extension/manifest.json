@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Shopee Product Grabber",
+  "version": "1.0",
+  "description": "Lay anh, video, thong tin san pham Shopee de tao bai dang",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
