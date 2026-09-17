@@ -147,14 +147,14 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
 <script>
 const TIMES=['07:00','09:00','11:30','13:00','15:00','17:00','19:00','20:30','21:30','22:00','07:30','08:30','10:00','12:00','14:00','16:00','18:00','19:30','21:00','22:30'];
 const STYLES=[
-  {name:'review',prompt:'Viet caption nhu nguoi dung that chia se trai nghiem mua SP. Tu nhien, chan that.'},
-  {name:'deal',prompt:'Viet caption kieu deal soc, gia tot. Tao cam giac khan cap.'},
-  {name:'question',prompt:'Bat dau bang cau hoi tuong tac. Sau do gioi thieu SP tu nhien.'},
-  {name:'tip',prompt:'Chia se meo/tip lien quan SP. Gioi thieu SP nhu cong cu ho tro.'},
-  {name:'compare',prompt:'So sanh gia voi mua ngoai cho/hieu sach. Nhan manh online re hon.'},
-  {name:'story',prompt:'Ke cau chuyen ngan lien quan. Dan den gioi thieu SP.'},
-  {name:'list',prompt:'List ly do nen mua SP. Dung emoji bullet. Ngan gon.'},
-  {name:'urgency',prompt:'Nhan manh da ban nhieu + danh gia tot. Tao FOMO.'},
+  {name:'review',prompt:'Viet nhu nguoi that vua mua xong, chia se cam nhan. VD: "Moi mua thu xong, chat luong tot qua troi... gia lai mem nua chuu"'},
+  {name:'deal',prompt:'Viet kieu san deal, gat dau. VD: "Oi troi deal nay ai chua chot thi phiii luon nha, gia nay la re bat ngo..."'},
+  {name:'question',prompt:'Mo dau bang cau hoi hook doc gia. VD: "Co ai dang tim [loai SP] gia re ma chat khong? Thi day nee..."'},
+  {name:'tip',prompt:'Chia se meo/kinh nghiem roi dan SP vao. VD: "Meo nho cho ai hay viet nhieu: chon loai giay nay se dat hon nhieu..."'},
+  {name:'compare',prompt:'So sanh gia online vs ngoai tiem. VD: "Ngoai hieu sach ban 45k, Shopee co 18k ship free. Tinh ra re gap doi lun..."'},
+  {name:'story',prompt:'Ke chuyen ngan dan den SP. VD: "Hom truoc con minh xin mua vo moi, len Shopee tim thi gap cai nay gia qua okii..."'},
+  {name:'list',prompt:'Liet ke ly do nen mua, dung emoji bullet ngan gon. VD: "3 ly do phai chot ngay:\n✅ Gia re bat ngo\n✅ Ship nhanh\n✅ Review 5 sao"'},
+  {name:'urgency',prompt:'Tao FOMO, khan cap. VD: "Da ban 10k+ san pham roi nha mn, danh gia 4.9 sao, gia nay khong biet con bao lau..."'},
 ];
 const CAT_COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e67e22','#34495e'];
 const CORS_PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
@@ -477,7 +477,7 @@ async function generatePosts(){
 }
 
 async function callGemini(p,style){
-  const prompt='Ban la copywriter chuyen viet bai Facebook cho group san sale Shopee VN. Viet TIENG VIET co dau.\n\nSan pham:\n- Ten: '+p.name+'\n- Gia: '+p.priceDisplay+'\n- Shop: '+p.shop+'\n- Da ban: '+p.salesDisplay+'\n- Danh muc: '+p.category+'\n'+(p.rating?'- Rating: '+p.rating+'/5\n':'')+'- Link: '+p.affiliateLink+'\n\nYeu cau:\n- '+style.prompt+'\n- DONG CUOI CUNG PHAI LA link san pham: '+p.affiliateLink+'\n- 3-6 dong, toi da 500 ky tu\n- 2-4 emoji\n- 2-3 hashtag truoc link\n- KHONG dung tu "affiliate","hoa hong","kiem tien","quang cao"\n- Viet tu nhien nhu nguoi binh thuong chia se deal\n\nChi tra ve caption. Dong cuoi PHAI la link.';
+  const prompt='Ban la thanh vien group Facebook "NGHIEN SHOPEE - SAN SALE" chuyen chia se deal tot cho moi nguoi. Viet TIENG VIET co dau, giong van tu nhien nhu chat voi ban be, KHONG duoc viet kieu robot hay quang cao.\n\nQuy tac viet:\n- Dung ngon ngu doi thuong cua gioi tre VN: "okii", "xin xo", "gat dau", "chot ngay", "re bat ngo", "ship nhanh", "mn", "nha", "nhe", "luon", "qua troi", "vl", "real", "legit"\n- Viet lien mach, tu nhien, co cam xuc that\n- KHONG viet kieu listing/robot: "San pham X, gia Y, shop Z"\n- KHONG dung tu: "affiliate", "hoa hong", "kiem tien", "quang cao", "gioi thieu", "san pham"\n- 2-4 emoji xen vao tu nhien (KHONG don emoji dau dong)\n- 2-3 hashtag cuoi: #shopee #sale #[tenSP]\n- DONG CUOI CUNG la link: '+p.affiliateLink+'\n\nSan pham can viet:\n- Ten: '+p.name+'\n- Gia: '+p.priceDisplay+'\n- Shop: '+p.shop+'\n- Da ban: '+p.salesDisplay+'\n'+(p.rating?'- Rating: '+p.rating+'/5\n':'')+'\nPhong cach lan nay:\n'+style.prompt+'\n\nViet 4-7 dong, toi da 500 ky tu. PHAI ket thuc bang link. Chi tra ve caption, khong giai thich gi them.';
   let lastErr='';
   for(let retry=0;retry<3;retry++){
     if(retry>0)await sleep(15000);
