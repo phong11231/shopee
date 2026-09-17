@@ -147,14 +147,14 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
 <script>
 const TIMES=['07:00','09:00','11:30','13:00','15:00','17:00','19:00','20:30','21:30','22:00','07:30','08:30','10:00','12:00','14:00','16:00','18:00','19:30','21:00','22:30'];
 const STYLES=[
-  {name:'review',prompt:'Viet nhu nguoi that vua mua xong, chia se cam nhan. VD: "Moi mua thu xong, chat luong tot qua troi... gia lai mem nua chuu"'},
-  {name:'deal',prompt:'Viet kieu san deal, gat dau. VD: "Oi troi deal nay ai chua chot thi phiii luon nha, gia nay la re bat ngo..."'},
-  {name:'question',prompt:'Mo dau bang cau hoi hook doc gia. VD: "Co ai dang tim [loai SP] gia re ma chat khong? Thi day nee..."'},
-  {name:'tip',prompt:'Chia se meo/kinh nghiem roi dan SP vao. VD: "Meo nho cho ai hay viet nhieu: chon loai giay nay se dat hon nhieu..."'},
-  {name:'compare',prompt:'So sanh gia online vs ngoai tiem. VD: "Ngoai hieu sach ban 45k, Shopee co 18k ship free. Tinh ra re gap doi lun..."'},
-  {name:'story',prompt:'Ke chuyen ngan dan den SP. VD: "Hom truoc con minh xin mua vo moi, len Shopee tim thi gap cai nay gia qua okii..."'},
-  {name:'list',prompt:'Liet ke ly do nen mua, dung emoji bullet ngan gon. VD: "3 ly do phai chot ngay:\n✅ Gia re bat ngo\n✅ Ship nhanh\n✅ Review 5 sao"'},
-  {name:'urgency',prompt:'Tao FOMO, khan cap. VD: "Da ban 10k+ san pham roi nha mn, danh gia 4.9 sao, gia nay khong biet con bao lau..."'},
+  {name:'review',prompt:'Viet nhu nguoi vua mua xong, chia se cam nhan that. Nhan manh chat luong, dong goi, trai nghiem thuc te. Chuyen nghiep nhung gan gui.'},
+  {name:'deal',prompt:'Viet kieu thong bao DEAL SOC. Mo dau MANH voi "DEAL SỐC", "GIÁ HỦY DIỆT", "FLASH SALE". Nhan manh % giam gia, so sanh gia goc vs gia sale.'},
+  {name:'question',prompt:'Mo dau bang cau hoi thu hut: "Ai đang tìm...?", "Bạn đã biết...?". Sau do gioi thieu SP chuyen nghiep voi day du thong tin.'},
+  {name:'tip',prompt:'Chia se meo/kinh nghiem lien quan SP. Mo dau bang "MẸO HAY:", "CHIA SẺ KINH NGHIỆM:". Chuyen nghiep, co gia tri cho nguoi doc.'},
+  {name:'compare',prompt:'So sanh gia Shopee vs mua ngoai (hieu sach, cho). Dung format: "Ngoài tiệm: XXk → Shopee: YYk". Nhan manh tiet kiem bao nhieu %.'},
+  {name:'story',prompt:'Ke cau chuyen ngan that ve nhu cau mua SP. Tu nhien, co tinh huong cu the, dan den gioi thieu SP. Chuyen nghiep nhung doi thuong.'},
+  {name:'list',prompt:'Format TOP/LIST: "TOP 3 LÝ DO NÊN MUA:", dung emoji bullet. Moi ly do 1 dong ngan gon. Ket thuc bang keu goi hanh dong manh.'},
+  {name:'urgency',prompt:'Tao FOMO chuyen nghiep: nhan manh so luong da ban, rating cao, sap het hang/het khuyen mai. Dung "CHỈ CÒN", "SẮP HẾT", "NHANH TAY".'},
 ];
 const CAT_COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e67e22','#34495e'];
 const CORS_PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
@@ -477,7 +477,7 @@ async function generatePosts(){
 }
 
 async function callGemini(p,style){
-  const prompt='Ban la thanh vien group Facebook "NGHIEN SHOPEE - SAN SALE" (28.9K members) chuyen chia se deal tot cho moi nguoi. Viet TIENG VIET co dau, giong van tu nhien nhu chat voi ban be.\n\nQuy tac viet:\n- Dung ngon ngu gioi tre VN: "okii", "xin xo", "gat dau", "chot ngay", "re bat ngo", "mn", "nha", "nhe", "qua troi"\n- Viet lien mach, tu nhien, co cam xuc that\n- KHONG viet kieu listing/robot\n- KHONG dung tu: "affiliate", "hoa hong", "kiem tien", "quang cao"\n\nQuy tac EMOJI (RAT QUAN TRONG):\n- Dung 5-8 emoji trai deu trong bai, KHONG don 1 cho\n- Bat dau bang emoji bat mat: 🔥🚨❗🌟💥🎉👉⚡\n- Xen emoji vao giua cau de tao diem nhan: ✅💰📦⭐🛒👍😍💨🎁\n- Dung emoji bullet cho list: ✅ 👉 🔸 ➡️\n- Phai co emoji o dong dau va dong hashtag\n\nQuy tac FORMAT:\n- Dong 1: Emoji + cau hook thu hut (IN HOA 1 phan duoc)\n- Than bai: thong tin SP tu nhien, co emoji xen vao\n- Dong hashtag: 2-3 hashtag voi emoji\n- Dong cuoi: link\n\nVi du caption HAY:\n"""\n🔥 Deal soc hom nay ai chua chot thi phiii luon nha!!\n\nMoi tim duoc combo vo 200 trang gia co 15k thoi mn — binh thuong ngoai hieu sach 30-35k mot cuon 😱\n\n✅ Giay trang min, ke ngang ro\n✅ Ship nhanh, dong goi can than\n✅ Da ban 10k+, review 4.9⭐\n\nChot keo het nha 🙏💨\n\n#shopee #sale #vanphongpham 🛒\nhttps://s.shopee.vn/xxxxx\n"""\n\nSan pham can viet:\n- Ten: '+p.name+'\n- Gia: '+p.priceDisplay+'\n- Shop: '+p.shop+'\n- Da ban: '+p.salesDisplay+'\n'+(p.rating?'- Rating: '+p.rating+'/5\n':'')+'\nPhong cach lan nay:\n'+style.prompt+'\n\nViet 5-8 dong, 300-500 ky tu. DONG CUOI CUNG PHAI la link: '+p.affiliateLink+'\nChi tra ve caption, khong giai thich.';
+  const prompt='Ban la admin group Facebook "NGHIEN SHOPEE - SAN SALE - MA GIAM GIA SHOPEE" (28.9K members). Viet caption TIENG VIET co dau, chuyen nghiep, thu hut, de doc.\n\nBAT BUOC:\n1. PHAI co TEN DAY DU cua san pham (copy nguyen ten ben duoi)\n2. PHAI co GIA\n3. PHAI co emoji thu hut (6-10 emoji)\n4. PHAI co link o dong cuoi cung\n\nTEN SAN PHAM (PHAI GHI NGUYEN): '+p.name+'\nGia: '+p.priceDisplay+'\nShop: '+p.shop+'\nDa ban: '+p.salesDisplay+(p.rating?'\nRating: '+p.rating+'/5':'')+'\nLink: '+p.affiliateLink+'\n\nFORMAT CHUAN (lam theo dung nay):\n\n\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25 [CAU HOOK THU HUT - IN HOA]\n\n\uD83D\uDCE6 [Ten day du san pham]\n\uD83D\uDCB0 Gia: [gia] (giam XX% / re hon hieu sach)\n\u2B50 Da ban [so] | Rating [sao]\n\uD83C\uDFEA Shop: [ten shop]\n\n\u2705 [Uu diem 1]\n\u2705 [Uu diem 2]\n\u2705 [Uu diem 3]\n\n\uD83D\uDC49 [Cau keu goi hanh dong - chot ngay / mua ngay / link ben duoi]\n\n#shopee #sale #[hashtag lien quan]\n[link]\n\nPhong cach lan nay: '+style.prompt+'\n\nLUU Y:\n- TEN SAN PHAM phai day du, KHONG duoc viet tat hay bo bot\n- Viet chuyen nghiep nhung van gan gui, tu nhien\n- KHONG dung tu: "affiliate", "hoa hong", "kiem tien", "quang cao"\n- Dong cuoi PHAI la link: '+p.affiliateLink+'\n- Chi tra ve caption, khong giai thich gi them';
   let lastErr='';
   for(let retry=0;retry<3;retry++){
     if(retry>0)await sleep(15000);
@@ -491,6 +491,11 @@ async function callGemini(p,style){
       const d=await res.json();let t=d.candidates?.[0]?.content?.parts?.[0]?.text;
       if(!t)throw new Error('Khong co caption');
       t=t.trim();
+      var shortName=p.name.split(' ').slice(0,5).join(' ').toLowerCase();
+      if(!t.toLowerCase().includes(shortName)){
+        var insertLine='\n📦 '+p.name+'\n💰 Giá: '+p.priceDisplay;
+        t=t.split('\n')[0]+'\n'+insertLine+'\n'+t.split('\n').slice(1).join('\n');
+      }
       if(!t.includes(p.affiliateLink))t+='\n\n'+p.affiliateLink;
       return t;
     }catch(e){if(e.message.includes('429')||e.message.toLowerCase().includes('quota')){lastErr=e.message;continue}throw e}
