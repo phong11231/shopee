@@ -263,9 +263,15 @@ async function fetchProductInfo(url){
     }catch(e){}
   }
   if(!shopId||!itemId){
-    const slug=url.replace(/https?:\/\/[^/]+\//,'').split('?')[0].split('-i.')[0].replace(/-/g,' ');
-    return{id:'url_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),name:slug||url,price:0,priceDisplay:'Xem link',
-      sales:0,salesDisplay:'?',shop:'?',commission:0,commissionDisplay:'?',affiliateLink:url,category:'Link',source:'link'};
+    // Thu lay ten tu HTML cua trang
+    const pageInfo=await fetchPageInfo(url);
+    if(pageInfo&&pageInfo.name){
+      return{id:'url_'+Date.now(),name:pageInfo.name,price:0,priceDisplay:pageInfo.price||'Xem link',
+        sales:0,salesDisplay:'?',shop:'?',commission:0,commissionDisplay:'?',affiliateLink:url,
+        category:guessCategory('',pageInfo.name),source:'link',image:pageInfo.image||'',images:pageInfo.image?[pageInfo.image]:[]};
+    }
+    // Fallback: dung Gemini de nhan dien
+    return await geminiIdentify(url,null,null);
   }
   const apiUrl='https://shopee.vn/api/v4/item/get?shopid='+shopId+'&itemid='+itemId;
   let data=null;
@@ -296,29 +302,83 @@ async function resolveShortLink(url){
   for(const proxy of CORS_PROXIES){
     try{
       const res=await fetch(proxy+encodeURIComponent(url),{redirect:'follow'});
+      const finalUrl=res.url||'';
+      if(finalUrl.includes('shopee.vn')&&finalUrl.match(/i\.(\d+)\.(\d+)/))return finalUrl;
       const text=await res.text();
-      const m=text.match(/shopee\.vn\/[^"'\s]+i\.(\d+)\.(\d+)/);
-      if(m)return m[0];
-      const urlMatch=text.match(/href="(https:\/\/shopee\.vn\/[^"]+)"/);
-      if(urlMatch)return urlMatch[1];
+      // Tim link product trong HTML
+      const patterns=[
+        /shopee\.vn\/[^"'\s<>]+i\.(\d+)\.(\d+)/,
+        /href="(https?:\/\/shopee\.vn\/[^"]+i\.\d+\.\d+[^"]*)"/,
+        /product\/(\d+)\/(\d+)/,
+        /content="https?:\/\/shopee\.vn\/([^"]+)"/
+      ];
+      for(const pat of patterns){
+        const m=text.match(pat);
+        if(m)return m[0].startsWith('href=')?m[1]:m[0];
+      }
+      // Tim trong meta tags / og:url
+      const ogUrl=text.match(/property="og:url"\s+content="([^"]+)"/);
+      if(ogUrl)return ogUrl[1];
+    }catch(e){}
+  }
+  return null;
+}
+
+async function fetchPageInfo(url){
+  // Lay thong tin tu HTML cua trang SP khi API khong duoc
+  for(const proxy of CORS_PROXIES){
+    try{
+      const res=await fetch(proxy+encodeURIComponent(url),{redirect:'follow'});
+      const text=await res.text();
+      const info={};
+      // Lay ten tu title hoac og:title
+      const title=text.match(/<title>([^<]+)<\/title>/i);
+      if(title)info.name=title[1].replace(/\s*[\-\|].*Shopee.*/i,'').replace(/\s*-\s*Shopee\s*Vi.*/i,'').trim();
+      const ogTitle=text.match(/property="og:title"\s+content="([^"]+)"/);
+      if(ogTitle&&!info.name)info.name=ogTitle[1].replace(/\s*[\-\|].*$/,'').trim();
+      // Lay hinh tu og:image
+      const ogImg=text.match(/property="og:image"\s+content="([^"]+)"/);
+      if(ogImg)info.image=ogImg[1];
+      // Lay gia tu meta hoac text
+      const priceMatch=text.match(/price["\s:]+["\s]*(\d[\d.,]+)/i);
+      if(priceMatch)info.price=priceMatch[1];
+      if(info.name)return info;
     }catch(e){}
   }
   return null;
 }
 
 async function geminiIdentify(url,shopId,itemId){
-  if(!apiKey)return{id:itemId||'?',name:url,price:0,priceDisplay:'?',sales:0,salesDisplay:'?',shop:'?',commission:0,commissionDisplay:'?',affiliateLink:url,category:'Link',source:'link'};
+  if(!apiKey){
+    // Thu lay thong tin tu HTML truoc
+    const pageInfo=await fetchPageInfo(url);
+    if(pageInfo&&pageInfo.name){
+      return{id:itemId||String(Date.now()),name:pageInfo.name,price:0,priceDisplay:pageInfo.price||'Xem link',
+        sales:0,salesDisplay:'?',shop:shopId||'?',commission:0,commissionDisplay:'?',affiliateLink:url,
+        category:guessCategory('',pageInfo.name),source:'link',image:pageInfo.image||'',images:pageInfo.image?[pageInfo.image]:[]};
+    }
+    return{id:itemId||'?',name:url,price:0,priceDisplay:'?',sales:0,salesDisplay:'?',shop:'?',commission:0,commissionDisplay:'?',affiliateLink:url,category:'Link',source:'link'};
+  }
+  // Thu lay HTML info truoc de cho Gemini context
+  const pageInfo=await fetchPageInfo(url);
+  const extraContext=pageInfo&&pageInfo.name?' Ten tren trang web: '+pageInfo.name:'';
   try{
     const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='+apiKey,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:'Day la link san pham Shopee: '+url+' (shopid: '+shopId+', itemid: '+itemId+'). Hay doan xem day la san pham gi dua tren URL. Tra ve JSON: {"name":"ten SP tieng Viet","category":"danh muc","priceGuess":"khoang gia"}. Chi tra ve JSON, khong giai thich.'}]}],generationConfig:{temperature:0.3,maxOutputTokens:200}})
+      body:JSON.stringify({contents:[{parts:[{text:'Day la link san pham Shopee: '+url+(shopId?' (shopid: '+shopId+', itemid: '+itemId+')':'')+'.'+extraContext+' Hay xac dinh ten san pham, danh muc va khoang gia. Tra ve JSON: {"name":"ten SP tieng Viet day du","category":"danh muc","priceGuess":"khoang gia"}. Chi tra ve JSON.'}]}],generationConfig:{temperature:0.1,maxOutputTokens:300}})
     });
     const data=await res.json();
     const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
     const json=JSON.parse(text.replace(/```json?\n?/g,'').replace(/```/g,'').trim());
-    return{id:itemId||'?',name:json.name||url,price:0,priceDisplay:json.priceGuess||'?',sales:0,salesDisplay:'?',
-      shop:shopId||'?',commission:0,commissionDisplay:'?',affiliateLink:url,category:json.category||'Link',source:'link'};
+    return{id:itemId||String(Date.now()),name:json.name||pageInfo?.name||url,price:0,priceDisplay:json.priceGuess||pageInfo?.price||'?',
+      sales:0,salesDisplay:'?',shop:shopId||'?',commission:0,commissionDisplay:'?',affiliateLink:url,
+      category:json.category||'Link',source:'link',image:pageInfo?.image||'',images:pageInfo?.image?[pageInfo.image]:[]};
   }catch(e){
+    if(pageInfo&&pageInfo.name){
+      return{id:itemId||String(Date.now()),name:pageInfo.name,price:0,priceDisplay:pageInfo.price||'?',
+        sales:0,salesDisplay:'?',shop:shopId||'?',commission:0,commissionDisplay:'?',affiliateLink:url,
+        category:guessCategory('',pageInfo.name),source:'link',image:pageInfo.image||'',images:pageInfo.image?[pageInfo.image]:[]};
+    }
     return{id:itemId||'?',name:url,price:0,priceDisplay:'?',sales:0,salesDisplay:'?',shop:'?',commission:0,commissionDisplay:'?',affiliateLink:url,category:'Link',source:'link'};
   }
 }
