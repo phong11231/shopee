@@ -467,7 +467,7 @@ async function generatePosts(){
       const fb=fallbackCap(product);generatedPosts[i]={product:product,caption:fb,style:style,time:time};
       const el=document.getElementById('ptx'+i);el.classList.remove('loading');el.textContent='[Loi: '+err.message+']\n\n'+fb;
     }
-    if(i<count-1)await sleep(2000);
+    if(i<count-1)await sleep(13000);
   }
   updProg(count,count);
   document.getElementById('generateBtn').disabled=false;
@@ -477,14 +477,25 @@ async function generatePosts(){
 }
 
 async function callGemini(p,style){
-  const prompt='Ban la copywriter chuyen viet bai Facebook cho group san sale Shopee VN. Viet TIENG VIET co dau.\n\nSan pham:\n- Ten: '+p.name+'\n- Gia: '+p.priceDisplay+'\n- Shop: '+p.shop+'\n- Da ban: '+p.salesDisplay+'\n- Danh muc: '+p.category+'\n'+(p.rating?'- Rating: '+p.rating+'/5\n':'')+'- Link: '+p.affiliateLink+'\n\nYeu cau:\n- '+style.prompt+'\n- Ket thuc bang link SP (dung chinh xac link tren)\n- 3-6 dong, toi da 500 ky tu\n- 2-4 emoji\n- 2-3 hashtag cuoi\n- KHONG dung tu "affiliate","hoa hong","kiem tien","quang cao"\n- Viet tu nhien nhu nguoi binh thuong chia se deal\n\nChi tra ve caption.';
-  const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='+apiKey,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.9,maxOutputTokens:400}})
-  });
-  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'API '+res.status)}
-  const d=await res.json();const t=d.candidates?.[0]?.content?.parts?.[0]?.text;
-  if(!t)throw new Error('Khong co caption');return t.trim();
+  const prompt='Ban la copywriter chuyen viet bai Facebook cho group san sale Shopee VN. Viet TIENG VIET co dau.\n\nSan pham:\n- Ten: '+p.name+'\n- Gia: '+p.priceDisplay+'\n- Shop: '+p.shop+'\n- Da ban: '+p.salesDisplay+'\n- Danh muc: '+p.category+'\n'+(p.rating?'- Rating: '+p.rating+'/5\n':'')+'- Link: '+p.affiliateLink+'\n\nYeu cau:\n- '+style.prompt+'\n- DONG CUOI CUNG PHAI LA link san pham: '+p.affiliateLink+'\n- 3-6 dong, toi da 500 ky tu\n- 2-4 emoji\n- 2-3 hashtag truoc link\n- KHONG dung tu "affiliate","hoa hong","kiem tien","quang cao"\n- Viet tu nhien nhu nguoi binh thuong chia se deal\n\nChi tra ve caption. Dong cuoi PHAI la link.';
+  let lastErr='';
+  for(let retry=0;retry<3;retry++){
+    if(retry>0)await sleep(15000);
+    try{
+      const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='+apiKey,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.9,maxOutputTokens:400}})
+      });
+      if(res.status===429){lastErr='Rate limit, dang cho...';continue}
+      if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'API '+res.status)}
+      const d=await res.json();let t=d.candidates?.[0]?.content?.parts?.[0]?.text;
+      if(!t)throw new Error('Khong co caption');
+      t=t.trim();
+      if(!t.includes(p.affiliateLink))t+='\n\n'+p.affiliateLink;
+      return t;
+    }catch(e){if(e.message.includes('429')||e.message.toLowerCase().includes('quota')){lastErr=e.message;continue}throw e}
+  }
+  throw new Error(lastErr||'Het so lan thu');
 }
 
 function fallbackCap(p){return p.name+'\n\nGia: '+p.priceDisplay+'\nShop: '+p.shop+'\nDa ban: '+p.salesDisplay+'\n\n'+p.affiliateLink+'\n\n#shopee #sale #giamgia'}
@@ -565,7 +576,7 @@ function downloadModalImg(url){
 }
 
 // ===== HELPERS =====
-function updProg(c,t){document.getElementById('progressFill').style.width=Math.round((c/t)*100)+'%';document.getElementById('progressText').textContent='Dang tao caption... '+c+'/'+t}
+function updProg(c,t){document.getElementById('progressFill').style.width=Math.round((c/t)*100)+'%';document.getElementById('progressText').textContent='Dang tao caption... '+c+'/'+t+(c<t?' (cho 13s tranh rate limit)':'')}
 function trunc(s,m){return s.length>m?s.slice(0,m)+'...':s}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 function parsePrice(s){if(!s)return 0;const n=s.replace(/[^\d.,]/g,'').replace(',','.');const v=parseFloat(n);return s.toLowerCase().includes('k')?v*1000:(v||0)}
