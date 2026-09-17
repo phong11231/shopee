@@ -24,14 +24,10 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--te
 .btn-outline{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}.btn-outline:hover{background:#fff5f3}
 .btn-sm{padding:6px 14px;font-size:13px}
 .btn-danger{background:#e74c3c;color:#fff;font-size:12px;padding:4px 10px;border:none;border-radius:6px;cursor:pointer}
-
-/* Tabs */
 .tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--border)}
 .tab{padding:10px 20px;cursor:pointer;font-weight:500;font-size:14px;border-bottom:3px solid transparent;color:var(--text2);transition:all .2s}
 .tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
 .tab-content{display:none}.tab-content.active{display:block}
-
-/* Inputs */
 input[type=password],input[type=text],input[type=number],select,textarea{
   padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;
   font-family:inherit;outline:none;transition:border-color .2s;width:100%
@@ -39,41 +35,38 @@ input[type=password],input[type=text],input[type=number],select,textarea{
 input:focus,textarea:focus,select:focus{border-color:var(--primary)}
 .api-row{display:flex;gap:12px;align-items:center}
 .api-row input{flex:1}
-
-/* Drop Zone */
 .drop-zone{border:2px dashed var(--border);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .3s;background:#fafafa}
 .drop-zone:hover,.drop-zone.drag-over{border-color:var(--primary);background:#fff5f3}
 .drop-zone .icon{font-size:36px;margin-bottom:8px}
 .drop-zone p{color:var(--text2);font-size:14px}
 .drop-zone .hint{font-size:12px;color:#999;margin-top:4px}
-
-/* Links textarea */
 .links-area{width:100%;min-height:120px;resize:vertical;font-size:13px;line-height:1.8}
 .links-info{font-size:12px;color:var(--text2);margin-top:8px}
-
-/* File Tags */
 .file-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .file-tag{display:inline-flex;align-items:center;gap:6px;background:#fff5f3;border:1px solid var(--primary);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--primary);font-weight:500}
 .file-tag .count{background:var(--primary);color:#fff;border-radius:10px;padding:1px 8px;font-size:11px}
 .file-tag .remove{cursor:pointer;font-size:16px;opacity:.6;margin-left:2px}.file-tag .remove:hover{opacity:1}
-
-/* Link items */
 .link-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f9f9f9;border-radius:8px;margin-bottom:6px;font-size:13px}
+.link-item .thumb{width:48px;height:48px;border-radius:6px;object-fit:cover;background:#eee;flex-shrink:0}
 .link-item .status{width:20px;text-align:center}
 .link-item .name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .link-item .price{font-weight:600;color:var(--primary);white-space:nowrap}
-
-/* Stats */
+.post-image-wrap{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;flex-wrap:wrap}
+.post-image-wrap .main-img{width:140px;height:140px;object-fit:cover;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:transform .2s}
+.post-image-wrap .main-img:hover{transform:scale(1.05)}
+.post-images-grid{display:flex;gap:6px;flex-wrap:wrap}
+.post-images-grid img{width:65px;height:65px;object-fit:cover;border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:transform .15s}
+.post-images-grid img:hover{transform:scale(1.1)}
+.img-modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:999;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:12px}
+.img-modal img{max-width:90%;max-height:80%;border-radius:8px}
+.img-modal .modal-actions{display:flex;gap:10px}
+.img-modal .modal-btn{background:#fff;color:#333;border:none;padding:8px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
 .stats-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .stat-card{background:var(--card);border-radius:10px;padding:14px 18px;flex:1;min-width:100px;box-shadow:var(--shadow)}
 .stat-card .label{font-size:11px;color:var(--text2)}.stat-card .value{font-size:20px;font-weight:700;color:var(--primary);margin-top:2px}
-
-/* Controls */
 .controls{background:var(--card);border-radius:12px;padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .controls label{font-size:13px;font-weight:500}
 .controls select,.controls input[type=number]{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;width:auto}
-
-/* Post Cards */
 .post-card{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--primary)}
 .post-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .post-number{background:var(--primary);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
@@ -90,59 +83,46 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
 .progress-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s;width:0%}
 .progress-text{font-size:13px;color:var(--text2);margin-bottom:8px;text-align:center}
 .hidden{display:none!important}
-.summary-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
-.summary-table th{text-align:left;padding:8px;background:#f5f5f5;border-bottom:2px solid var(--border)}
-.summary-table td{padding:8px;border-bottom:1px solid #f0f0f0}
-@media(max-width:600px){.api-row{flex-direction:column}.controls{flex-direction:column;align-items:stretch}.stats-bar{flex-direction:column}}
+@media(max-width:600px){.api-row{flex-direction:column}.controls{flex-direction:column;align-items:stretch}.stats-bar{flex-direction:column}.post-image-wrap .main-img{width:100px;height:100px}}
 </style>
 </head>
 <body>
-<div class="header"><span style="font-size:24px">🛒</span><h1>Shopee Post Generator</h1></div>
+<div class="header"><span style="font-size:24px">&#x1F6D2;</span><h1>Shopee Post Generator</h1></div>
 <div class="container">
-
-  <!-- API Key -->
   <div class="section" id="apiSection">
-    <h2>🔑 Buoc 1: Gemini API Key</h2>
+    <h2>&#x1F511; Buoc 1: Gemini API Key</h2>
     <div class="api-row">
       <input type="password" id="apiKeyInput" placeholder="Paste API key tu aistudio.google.com...">
       <button class="btn btn-primary" onclick="saveApiKey()">Luu</button>
     </div>
   </div>
-
-  <!-- Input: Tabs -->
   <div class="section" id="inputSection">
-    <h2>📁 Buoc 2: Nhap san pham</h2>
+    <h2>&#x1F4C1; Buoc 2: Nhap san pham</h2>
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('csv')">📄 Upload CSV</div>
-      <div class="tab" onclick="switchTab('links')">🔗 Paste Link</div>
+      <div class="tab active" onclick="switchTab('csv')">&#x1F4C4; Upload CSV</div>
+      <div class="tab" onclick="switchTab('links')">&#x1F517; Paste Link</div>
     </div>
-
-    <!-- Tab: CSV -->
     <div class="tab-content active" id="tabCsv">
       <div class="drop-zone" id="dropZone">
-        <div class="icon">📄</div>
+        <div class="icon">&#x1F4C4;</div>
         <p>Keo tha file CSV vao day (nhieu file duoc)</p>
         <p class="hint">VD: but_chi.csv, giay_nhap.csv, vo.csv ...</p>
       </div>
       <input type="file" id="fileInput" accept=".csv" style="display:none" multiple>
       <div class="file-tags" id="fileTags"></div>
     </div>
-
-    <!-- Tab: Links -->
     <div class="tab-content" id="tabLinks">
       <textarea class="links-area" id="linksInput" placeholder="Dan link Shopee vao day, moi link 1 dong:&#10;&#10;https://shopee.vn/San-pham-ABC-i.123456.789012&#10;https://s.shopee.vn/abcdef&#10;https://shopee.vn/product/123/456&#10;..."></textarea>
       <div class="links-info">Ho tro: link san pham Shopee, link rut gon (s.shopee.vn), link affiliate. Moi link 1 dong.</div>
       <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="btn btn-primary" onclick="processLinks()">🔍 Lay thong tin san pham</button>
+        <button class="btn btn-primary" onclick="processLinks()">&#x1F50D; Lay thong tin san pham</button>
         <button class="btn btn-outline" onclick="clearLinks()">Xoa</button>
       </div>
       <div id="linkResults" style="margin-top:12px"></div>
     </div>
   </div>
-
-  <!-- Summary -->
   <div class="section hidden" id="summarySection">
-    <h2>📊 Tong hop</h2>
+    <h2>&#x1F4CA; Tong hop</h2>
     <div class="stats-bar">
       <div class="stat-card"><div class="label">Tong SP</div><div class="value" id="statTotal">0</div></div>
       <div class="stat-card"><div class="label">Tu CSV</div><div class="value" id="statCsv">0</div></div>
@@ -150,8 +130,6 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
       <div class="stat-card"><div class="label">Trung lap</div><div class="value" id="statDupes">0</div></div>
     </div>
   </div>
-
-  <!-- Controls -->
   <div class="controls hidden" id="controlsBar">
     <label>So bai/ngay:</label>
     <input type="number" id="postsPerDay" value="8" min="1" max="20" style="width:60px">
@@ -162,15 +140,13 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
       <option value="sales">Ban chay</option>
       <option value="diverse">Da dang</option>
     </select>
-    <button class="btn btn-primary" onclick="generatePosts()" id="generateBtn">✨ Tao bai viet</button>
-    <button class="btn btn-outline hidden" onclick="copyAllPosts()" id="copyAllBtn">📋 Copy tat ca</button>
+    <button class="btn btn-primary" onclick="generatePosts()" id="generateBtn">&#x2728; Tao bai viet</button>
+    <button class="btn btn-outline hidden" onclick="copyAllPosts()" id="copyAllBtn">&#x1F4CB; Copy tat ca</button>
   </div>
-
   <div class="hidden" id="progressSection">
     <div class="progress-text" id="progressText"></div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   </div>
-
   <div id="postsContainer"></div>
 </div>
 
@@ -196,12 +172,11 @@ let linkProducts=[];
 let allProducts=[];
 let generatedPosts=[];
 
-// Init
 document.addEventListener('DOMContentLoaded',()=>{
   try{const s=localStorage.getItem('gemini_api_key');apiKey=s||DEFAULT_KEY}catch(e){apiKey=DEFAULT_KEY}
   const d=apiKey===DEFAULT_KEY?'(Mac dinh)':'\u2022'.repeat(12)+apiKey.slice(-4);
   document.getElementById('apiKeyInput').value=d;
-  document.getElementById('apiSection').querySelector('h2').innerHTML='\uD83D\uDD11 Buoc 1: API Key \u2705';
+  document.getElementById('apiSection').querySelector('h2').innerHTML='&#x1F511; Buoc 1: API Key &#x2705;';
 });
 
 function saveApiKey(){
@@ -209,10 +184,9 @@ function saveApiKey(){
   if(!k||k.startsWith('\u2022')||k==='(Mac dinh)')return;
   apiKey=k;try{localStorage.setItem('gemini_api_key',k)}catch(e){}
   document.getElementById('apiKeyInput').value='\u2022'.repeat(12)+k.slice(-4);
-  document.getElementById('apiSection').querySelector('h2').innerHTML='\uD83D\uDD11 Buoc 1: API Key \u2705';
+  document.getElementById('apiSection').querySelector('h2').innerHTML='&#x1F511; Buoc 1: API Key &#x2705;';
 }
 
-// Tabs
 function switchTab(tab){
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='csv'?0:1)));
   document.getElementById('tabCsv').classList.toggle('active',tab==='csv');
@@ -257,10 +231,8 @@ async function processLinks(){
   if(!raw)return;
   const urls=raw.split('\n').map(l=>l.trim()).filter(l=>l&&(l.includes('shopee')));
   if(!urls.length){alert('Khong tim thay link Shopee hop le!');return}
-
   const container=document.getElementById('linkResults');
-  container.innerHTML=`<div class="progress-text">Dang lay thong tin ${urls.length} san pham...</div><div class="progress-bar"><div class="progress-fill" id="linkProgress" style="width:0%"></div></div>`;
-
+  container.innerHTML='<div class="progress-text">Dang lay thong tin '+urls.length+' san pham...</div><div class="progress-bar"><div class="progress-fill" id="linkProgress" style="width:0%"></div></div>';
   linkProducts=[];
   for(let i=0;i<urls.length;i++){
     document.getElementById('linkProgress').style.width=Math.round(((i+1)/urls.length)*100)+'%';
@@ -272,26 +244,16 @@ async function processLinks(){
         shop:'?',commission:0,commissionDisplay:'?',affiliateLink:urls[i],category:'Link',source:'link',error:e.message});
     }
   }
-
   renderLinkResults();
   refreshAll();
 }
 
 async function fetchProductInfo(url){
-  // Extract shopid & itemid from various URL formats
   let shopId,itemId,cleanUrl=url;
-
-  // Format: shopee.vn/product/SHOPID/ITEMID
   let m=url.match(/shopee\.vn\/product\/(\d+)\/(\d+)/);
   if(m){shopId=m[1];itemId=m[2]}
-
-  // Format: shopee.vn/Name-i.SHOPID.ITEMID
   if(!shopId){m=url.match(/shopee\.vn\/.*-i\.(\d+)\.(\d+)/);if(m){shopId=m[1];itemId=m[2]}}
-
-  // Format: shopee.vn/Name-i.SHOPID.ITEMID?...
   if(!shopId){m=url.match(/i\.(\d+)\.(\d+)/);if(m){shopId=m[1];itemId=m[2]}}
-
-  // Short link (s.shopee.vn) — try to resolve via CORS proxy
   if(!shopId&&url.includes('s.shopee.vn')){
     try{
       const resolved=await resolveShortLink(url);
@@ -301,16 +263,12 @@ async function fetchProductInfo(url){
       }
     }catch(e){}
   }
-
   if(!shopId||!itemId){
-    // Fallback: extract product name from URL slug
     const slug=url.replace(/https?:\/\/[^/]+\//,'').split('?')[0].split('-i.')[0].replace(/-/g,' ');
     return{id:'url_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),name:slug||url,price:0,priceDisplay:'Xem link',
       sales:0,salesDisplay:'?',shop:'?',commission:0,commissionDisplay:'?',affiliateLink:url,category:'Link',source:'link'};
   }
-
-  // Fetch product details via Shopee API + CORS proxy
-  const apiUrl=`https://shopee.vn/api/v4/item/get?shopid=${shopId}&itemid=${itemId}`;
+  const apiUrl='https://shopee.vn/api/v4/item/get?shopid='+shopId+'&itemid='+itemId;
   let data=null;
   for(const proxy of CORS_PROXIES){
     try{
@@ -318,7 +276,6 @@ async function fetchProductInfo(url){
       if(res.ok){data=await res.json();break}
     }catch(e){}
   }
-
   if(data&&data.data){
     const d=data.data;
     const price=d.price_max_before_discount?d.price_max_before_discount/100000:(d.price?d.price/100000:0);
@@ -326,13 +283,13 @@ async function fetchProductInfo(url){
     const sold=d.historical_sold||d.sold||0;
     const shop=d.shop_location||d.shopid||shopId;
     const rating=d.item_rating?.rating_star?.toFixed(1)||'?';
-    const img=d.image?`https://down-vn.img.susercontent.com/file/${d.image}`:'';
-    return{id:String(itemId),name,price,priceDisplay:formatVND(price),sales:sold,salesDisplay:formatSold(sold),
+    const img=d.image?'https://down-vn.img.susercontent.com/file/'+d.image:'';
+    const imgs=(d.images||[]).slice(0,6).map(function(h){return 'https://down-vn.img.susercontent.com/file/'+h});
+    if(img&&!imgs.includes(img))imgs.unshift(img);
+    return{id:String(itemId),name:name,price:price,priceDisplay:formatVND(price),sales:sold,salesDisplay:formatSold(sold),
       shop:String(shopId),commission:0,commissionDisplay:'(tu link)',affiliateLink:url,
-      category:guessCategory('',name),source:'link',rating,image:img,shopId,itemId};
+      category:guessCategory('',name),source:'link',rating:rating,image:img,images:imgs,shopId:shopId,itemId:itemId};
   }
-
-  // Fallback: use Gemini to identify product from URL
   return await geminiIdentify(url,shopId,itemId);
 }
 
@@ -353,9 +310,9 @@ async function resolveShortLink(url){
 async function geminiIdentify(url,shopId,itemId){
   if(!apiKey)return{id:itemId||'?',name:url,price:0,priceDisplay:'?',sales:0,salesDisplay:'?',shop:'?',commission:0,commissionDisplay:'?',affiliateLink:url,category:'Link',source:'link'};
   try{
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,{
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='+apiKey,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:`Day la link san pham Shopee: ${url} (shopid: ${shopId}, itemid: ${itemId}). Hay doan xem day la san pham gi dua tren URL. Tra ve JSON: {"name":"ten SP tieng Viet","category":"danh muc","priceGuess":"khoang gia"}. Chi tra ve JSON, khong giai thich.`}]}],generationConfig:{temperature:0.3,maxOutputTokens:200}})
+      body:JSON.stringify({contents:[{parts:[{text:'Day la link san pham Shopee: '+url+' (shopid: '+shopId+', itemid: '+itemId+'). Hay doan xem day la san pham gi dua tren URL. Tra ve JSON: {"name":"ten SP tieng Viet","category":"danh muc","priceGuess":"khoang gia"}. Chi tra ve JSON, khong giai thich.'}]}],generationConfig:{temperature:0.3,maxOutputTokens:200}})
     });
     const data=await res.json();
     const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
@@ -370,19 +327,23 @@ async function geminiIdentify(url,shopId,itemId){
 function renderLinkResults(){
   const c=document.getElementById('linkResults');
   if(!linkProducts.length){c.innerHTML='<p style="color:#999">Khong tim thay SP nao.</p>';return}
-  c.innerHTML=linkProducts.map((p,i)=>`
-    <div class="link-item">
-      <span class="status">${p.error?'❌':'✅'}</span>
-      <span class="name" title="${p.name}">${p.name}</span>
-      <span class="price">${p.priceDisplay}</span>
-      <span class="btn-danger" onclick="removeLinkProduct(${i})">✕</span>
-    </div>`).join('');
+  let html='';
+  for(let i=0;i<linkProducts.length;i++){
+    const p=linkProducts[i];
+    html+='<div class="link-item">';
+    if(p.image)html+='<img class="thumb" src="'+esc(p.image)+'" onerror="this.style.display=\'none\'" onclick="showModal(\''+esc(p.image)+'\')">';
+    html+='<span class="status">'+(p.error?'&#x274C;':'&#x2705;')+'</span>';
+    html+='<span class="name" title="'+esc(p.name)+'">'+esc(p.name)+'</span>';
+    html+='<span class="price">'+esc(p.priceDisplay)+'</span>';
+    html+='<span class="btn-danger" onclick="removeLinkProduct('+i+')">&#x2715;</span>';
+    html+='</div>';
+  }
+  c.innerHTML=html;
 }
 
 function removeLinkProduct(i){linkProducts.splice(i,1);renderLinkResults();refreshAll()}
 function clearLinks(){document.getElementById('linksInput').value='';linkProducts=[];document.getElementById('linkResults').innerHTML='';refreshAll()}
 
-// ===== MERGE =====
 function refreshAll(){
   const csvProds=Object.values(csvFiles).flat();
   renderFileTags();
@@ -400,10 +361,12 @@ function refreshAll(){
 }
 
 function renderFileTags(){
-  document.getElementById('fileTags').innerHTML=Object.entries(csvFiles).map(([n,p])=>{
+  let html='';
+  for(const [n,p] of Object.entries(csvFiles)){
     const label=n.replace(/\.csv$/i,'').substring(0,30);
-    return`<div class="file-tag">📄 ${label} <span class="count">${p.length}</span><span class="remove" onclick="removeFile('${n.replace(/'/g,"\\'")}')">&times;</span></div>`;
-  }).join('');
+    html+='<div class="file-tag">&#x1F4C4; '+esc(label)+' <span class="count">'+p.length+'</span><span class="remove" onclick="removeFile(\''+n.replace(/'/g,"\\'")+'\')">&times;</span></div>';
+  }
+  document.getElementById('fileTags').innerHTML=html;
 }
 
 // ===== SMART SELECT =====
@@ -456,20 +419,42 @@ async function generatePosts(){
     const cc=p.commission>=10?'commission-high':p.commission>=5?'commission-mid':'commission-low';
     const catIdx=[...new Set(allProducts.map(x=>x.category))].indexOf(p.category);
     const catCol=CAT_COLORS[catIdx%CAT_COLORS.length];
-    ctn.innerHTML+=`<div class="post-card" id="pc${i}">
-      <div class="post-header"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="post-number">${i+1}</div><div class="post-time">\u23F0 ${time}</div>
-        <span class="post-category" style="background:${catCol}">${p.category}</span>
-        <span class="commission-badge ${cc}">${p.commissionDisplay}</span>
-        ${p.source==='link'?'<span style="font-size:11px;background:#e3f2fd;color:#1565c0;padding:2px 8px;border-radius:4px">Tu link</span>':''}
-      </div></div>
-      <div class="post-product"><strong>${trunc(p.name,70)}</strong> — ${p.priceDisplay} — Shop: ${p.shop} — Da ban: ${p.salesDisplay}</div>
-      <div class="post-content loading" id="ptx${i}">\u23F3 Dang viet caption...</div>
-      <div class="post-actions">
-        <button class="btn btn-primary btn-sm" onclick="copyPost(${i})">📋 Copy</button>
-        <button class="btn btn-outline btn-sm" onclick="regenPost(${i})">🔄 Viet lai</button>
-        <span class="copy-feedback" id="cf${i}">Da copy!</span>
-      </div></div>`;
+    const hasImgs=p.images&&p.images.length>0;
+    const mainImg=p.image||'';
+    const extraImgs=(p.images||[]).slice(1,5);
+
+    let card='<div class="post-card" id="pc'+i+'">';
+    card+='<div class="post-header"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
+    card+='<div class="post-number">'+(i+1)+'</div>';
+    card+='<div class="post-time">&#x23F0; '+time+'</div>';
+    card+='<span class="post-category" style="background:'+catCol+'">'+esc(p.category)+'</span>';
+    card+='<span class="commission-badge '+cc+'">'+esc(p.commissionDisplay)+'</span>';
+    if(p.source==='link')card+='<span style="font-size:11px;background:#e3f2fd;color:#1565c0;padding:2px 8px;border-radius:4px">Tu link</span>';
+    card+='</div></div>';
+    card+='<div class="post-product"><strong>'+esc(trunc(p.name,70))+'</strong> &mdash; '+esc(p.priceDisplay)+' &mdash; Shop: '+esc(String(p.shop))+' &mdash; Da ban: '+esc(p.salesDisplay)+'</div>';
+
+    if(hasImgs){
+      card+='<div class="post-image-wrap">';
+      card+='<img class="main-img" src="'+esc(mainImg)+'" onclick="showModal(\''+esc(mainImg)+'\')" onerror="this.style.display=\'none\'">';
+      if(extraImgs.length){
+        card+='<div class="post-images-grid">';
+        for(const u of extraImgs)card+='<img src="'+esc(u)+'" onclick="showModal(\''+esc(u)+'\')" onerror="this.style.display=\'none\'">';
+        card+='</div>';
+      }
+      card+='</div>';
+    }
+
+    card+='<div class="post-content loading" id="ptx'+i+'">&#x23F3; Dang viet caption...</div>';
+    card+='<div class="post-actions">';
+    card+='<button class="btn btn-primary btn-sm" onclick="copyPost('+i+')">&#x1F4CB; Copy caption</button>';
+    if(hasImgs){
+      card+='<button class="btn btn-outline btn-sm" onclick="downloadImage('+i+')">&#x1F4E5; Tai hinh</button>';
+      card+='<button class="btn btn-outline btn-sm" onclick="copyImageAndCaption('+i+')">&#x1F5BC;&#xFE0F; Copy hinh+cap</button>';
+    }
+    card+='<button class="btn btn-outline btn-sm" onclick="regenPost('+i+')">&#x1F504; Viet lai</button>';
+    card+='<span class="copy-feedback" id="cf'+i+'">Da copy!</span>';
+    card+='</div></div>';
+    ctn.innerHTML+=card;
   }
 
   for(let i=0;i<count;i++){
@@ -477,84 +462,118 @@ async function generatePosts(){
     updProg(i,count);
     try{
       const cap=await callGemini(product,style);
-      generatedPosts[i]={product,caption:cap,style,time};
-      const el=document.getElementById(`ptx${i}`);el.classList.remove('loading');el.textContent=cap;
+      generatedPosts[i]={product:product,caption:cap,style:style,time:time};
+      const el=document.getElementById('ptx'+i);el.classList.remove('loading');el.textContent=cap;
     }catch(err){
-      const fb=fallback(product);generatedPosts[i]={product,caption:fb,style,time};
-      const el=document.getElementById(`ptx${i}`);el.classList.remove('loading');el.textContent=`[Loi: ${err.message}]\n\n${fb}`;
+      const fb=fallbackCap(product);generatedPosts[i]={product:product,caption:fb,style:style,time:time};
+      const el=document.getElementById('ptx'+i);el.classList.remove('loading');el.textContent='[Loi: '+err.message+']\n\n'+fb;
     }
     if(i<count-1)await sleep(2000);
   }
   updProg(count,count);
   document.getElementById('generateBtn').disabled=false;
-  document.getElementById('generateBtn').textContent='\u2728 Tao bai viet';
+  document.getElementById('generateBtn').textContent='&#x2728; Tao bai viet';
   document.getElementById('copyAllBtn').classList.remove('hidden');
   document.getElementById('progressSection').classList.add('hidden');
 }
 
 async function callGemini(p,style){
-  const prompt=`Ban la copywriter chuyen viet bai Facebook cho group san sale Shopee VN. Viet TIENG VIET co dau.
-
-San pham:
-- Ten: ${p.name}
-- Gia: ${p.priceDisplay}
-- Shop: ${p.shop}
-- Da ban: ${p.salesDisplay}
-- Danh muc: ${p.category}
-${p.rating?'- Rating: '+p.rating+'/5':''}
-- Link: ${p.affiliateLink}
-
-Yeu cau:
-- ${style.prompt}
-- Ket thuc bang link SP (dung chinh xac link tren)
-- 3-6 dong, toi da 500 ky tu
-- 2-4 emoji
-- 2-3 hashtag cuoi
-- KHONG dung tu "affiliate","hoa hong","kiem tien","quang cao"
-- Viet tu nhien nhu nguoi binh thuong chia se deal
-
-Chi tra ve caption.`;
-
-  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,{
+  const prompt='Ban la copywriter chuyen viet bai Facebook cho group san sale Shopee VN. Viet TIENG VIET co dau.\n\nSan pham:\n- Ten: '+p.name+'\n- Gia: '+p.priceDisplay+'\n- Shop: '+p.shop+'\n- Da ban: '+p.salesDisplay+'\n- Danh muc: '+p.category+'\n'+(p.rating?'- Rating: '+p.rating+'/5\n':'')+'- Link: '+p.affiliateLink+'\n\nYeu cau:\n- '+style.prompt+'\n- Ket thuc bang link SP (dung chinh xac link tren)\n- 3-6 dong, toi da 500 ky tu\n- 2-4 emoji\n- 2-3 hashtag cuoi\n- KHONG dung tu "affiliate","hoa hong","kiem tien","quang cao"\n- Viet tu nhien nhu nguoi binh thuong chia se deal\n\nChi tra ve caption.';
+  const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='+apiKey,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.9,maxOutputTokens:400}})
   });
-  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||`API ${res.status}`)}
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'API '+res.status)}
   const d=await res.json();const t=d.candidates?.[0]?.content?.parts?.[0]?.text;
   if(!t)throw new Error('Khong co caption');return t.trim();
 }
 
-function fallback(p){return`\uD83D\uDD25 ${p.name}\n\n\uD83D\uDCB0 ${p.priceDisplay}\n\uD83C\uDFEA ${p.shop}\n\uD83D\uDCE6 Da ban: ${p.salesDisplay}\n\n\uD83D\uDED2 ${p.affiliateLink}\n\n#shopee #sale #giamgia`}
+function fallbackCap(p){return p.name+'\n\nGia: '+p.priceDisplay+'\nShop: '+p.shop+'\nDa ban: '+p.salesDisplay+'\n\n'+p.affiliateLink+'\n\n#shopee #sale #giamgia'}
 
 async function regenPost(i){
-  if(!generatedPosts[i])return;const{product}=generatedPosts[i];
+  if(!generatedPosts[i])return;const product=generatedPosts[i].product;
   const style=STYLES[Math.floor(Math.random()*STYLES.length)];
-  const el=document.getElementById(`ptx${i}`);el.classList.add('loading');el.textContent='\u23F3 Viet lai...';
-  try{const c=await callGemini(product,style);generatedPosts[i].caption=c;el.classList.remove('loading');el.textContent=c}
-  catch(e){el.classList.remove('loading');el.textContent=`[Loi: ${e.message}]`}
+  const el=document.getElementById('ptx'+i);el.classList.add('loading');el.textContent='Dang viet lai...';
+  try{const c=await callGemini(product,style);generatedPosts[i].caption=c;generatedPosts[i].style=style;el.classList.remove('loading');el.textContent=c}
+  catch(e){el.classList.remove('loading');el.textContent='[Loi: '+e.message+']'}
 }
 
+// ===== COPY & DOWNLOAD =====
 function copyPost(i){
   if(!generatedPosts[i])return;
-  navigator.clipboard.writeText(generatedPosts[i].caption).then(()=>{
-    const f=document.getElementById(`cf${i}`);f.classList.add('show');setTimeout(()=>f.classList.remove('show'),2000);
-  });
+  navigator.clipboard.writeText(generatedPosts[i].caption).then(()=>showCopied(i));
 }
+
 function copyAllPosts(){
-  const all=generatedPosts.filter(p=>p).map((p,i)=>`=== BAI ${i+1} | ${p.time} | ${p.product.category} ===\n\n${p.caption}\n`).join('\n'+'\u2500'.repeat(40)+'\n\n');
+  const sep='========================================';
+  const all=generatedPosts.filter(p=>p).map((p,i)=>'=== BAI '+(i+1)+' | '+p.time+' | '+p.product.category+' ===\n\n'+p.caption+'\n').join('\n'+sep+'\n\n');
   navigator.clipboard.writeText(all).then(()=>{
-    const b=document.getElementById('copyAllBtn');b.textContent='\u2705 Da copy!';setTimeout(()=>{b.textContent='\uD83D\uDCCB Copy tat ca'},2000);
+    const b=document.getElementById('copyAllBtn');b.textContent='Da copy!';setTimeout(()=>{b.textContent='&#x1F4CB; Copy tat ca'},2000);
   });
 }
 
-// Helpers
-function updProg(c,t){document.getElementById('progressFill').style.width=Math.round((c/t)*100)+'%';document.getElementById('progressText').textContent=`Dang tao caption... ${c}/${t}`}
+function downloadImage(i){
+  if(!generatedPosts[i])return;
+  const p=generatedPosts[i].product;
+  if(!p.image)return;
+  const a=document.createElement('a');
+  a.href=p.image;a.target='_blank';a.download='shopee_'+p.id+'.jpg';
+  a.click();
+}
+
+async function copyImageAndCaption(i){
+  if(!generatedPosts[i])return;
+  const p=generatedPosts[i];
+  const imgUrl=p.product.image;
+  if(!imgUrl){copyPost(i);return}
+
+  try{
+    const res=await fetch(imgUrl);
+    const blob=await res.blob();
+    const items=[
+      new ClipboardItem({
+        'text/plain': new Blob([p.caption],{type:'text/plain'}),
+        [blob.type]: blob
+      })
+    ];
+    await navigator.clipboard.write(items);
+    showCopied(i,'Hinh+cap da copy!');
+  }catch(e){
+    navigator.clipboard.writeText(p.caption+'\n\n[Hinh: '+imgUrl+']').then(()=>showCopied(i,'Cap+link hinh da copy!'));
+  }
+}
+
+function showCopied(i,msg){
+  const f=document.getElementById('cf'+i);
+  f.textContent=msg||'Da copy!';
+  f.classList.add('show');
+  setTimeout(()=>f.classList.remove('show'),2500);
+}
+
+// ===== IMAGE MODAL =====
+function showModal(imgUrl){
+  const modal=document.createElement('div');
+  modal.className='img-modal';
+  modal.innerHTML='<img src="'+esc(imgUrl)+'"><div class="modal-actions"><button class="modal-btn" onclick="downloadModalImg(\''+esc(imgUrl)+'\')">&#x1F4E5; Tai hinh</button><button class="modal-btn" onclick="this.closest(\'.img-modal\').remove()">&#x2716; Dong</button></div>';
+  modal.addEventListener('click',function(e){if(e.target===modal)modal.remove()});
+  document.body.appendChild(modal);
+}
+
+function downloadModalImg(url){
+  const a=document.createElement('a');
+  a.href=url;a.target='_blank';a.download='shopee_image.jpg';
+  a.click();
+}
+
+// ===== HELPERS =====
+function updProg(c,t){document.getElementById('progressFill').style.width=Math.round((c/t)*100)+'%';document.getElementById('progressText').textContent='Dang tao caption... '+c+'/'+t}
 function trunc(s,m){return s.length>m?s.slice(0,m)+'...':s}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 function parsePrice(s){if(!s)return 0;const n=s.replace(/[^\d.,]/g,'').replace(',','.');const v=parseFloat(n);return s.toLowerCase().includes('k')?v*1000:(v||0)}
 function parseSales(s){if(!s)return 0;s=s.trim();if(/k\+?/i.test(s))return parseFloat(s.replace(/[^\d.,]/g,'').replace(',','.'))*1000;return parseInt(s.replace(/[^\d]/g,''))||0}
 function formatVND(n){return n>=1000?Math.round(n/1000)+'k\u0111':n+'\u0111'}
 function formatSold(n){return n>=1000?Math.round(n/1000)+'k+':String(n)}
+function esc(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
 function guessCategory(fname,text){
   const t=(fname+' '+text).toLowerCase();
   const kw=[['but chi','pencil','but_chi'],['giay nhap','giay in','paper','giay_nhap','giay'],['vo ','so tay','notebook','so nhap'],
