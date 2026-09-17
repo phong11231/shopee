@@ -164,7 +164,7 @@ const STYLES=[
 ];
 const CAT_COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e67e22','#34495e'];
 const CORS_PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
-const DEFAULT_KEY='AIzaSyB_Z-FO1_s4bU4eRkkYKSJFNk4Y9Syxdu8';
+const DEFAULT_KEY='';
 
 let apiKey='';
 let csvFiles={};
@@ -472,7 +472,7 @@ async function generatePosts(){
   }
   updProg(count,count);
   document.getElementById('generateBtn').disabled=false;
-  document.getElementById('generateBtn').textContent='&#x2728; Tao bai viet';
+  document.getElementById('generateBtn').innerHTML='&#x2728; Tao bai viet';
   document.getElementById('copyAllBtn').classList.remove('hidden');
   document.getElementById('progressSection').classList.add('hidden');
 }
@@ -508,7 +508,7 @@ function copyAllPosts(){
   const sep='========================================';
   const all=generatedPosts.filter(p=>p).map((p,i)=>'=== BAI '+(i+1)+' | '+p.time+' | '+p.product.category+' ===\n\n'+p.caption+'\n').join('\n'+sep+'\n\n');
   navigator.clipboard.writeText(all).then(()=>{
-    const b=document.getElementById('copyAllBtn');b.textContent='Da copy!';setTimeout(()=>{b.textContent='&#x1F4CB; Copy tat ca'},2000);
+    const b=document.getElementById('copyAllBtn');b.textContent='Da copy!';setTimeout(()=>{b.innerHTML='&#x1F4CB; Copy tat ca'},2000);
   });
 }
 
