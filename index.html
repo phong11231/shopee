@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopee Post Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f5f5;
+  --card: #ffffff;
+  --primary: #EE4D2D;
+  --primary-dark: #D73211;
+  --text: #222222;
+  --text-secondary: #666666;
+  --border: #e0e0e0;
+  --success: #27ae60;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.header {
+  background: var(--primary); color: white; padding: 16px 24px;
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(238,77,45,0.3);
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.container { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+.section {
+  background: var(--card); border-radius: 12px; padding: 24px;
+  margin-bottom: 20px; box-shadow: var(--shadow);
+}
+.section h2 {
+  font-size: 16px; font-weight: 600; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.api-row { display: flex; gap: 12px; align-items: center; }
+.api-row input {
+  flex: 1; padding: 10px 14px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 14px; font-family: inherit; outline: none;
+}
+.api-row input:focus { border-color: var(--primary); }
+
+.btn {
+  padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px;
+  font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+.btn-outline { background: white; color: var(--primary); border: 1.5px solid var(--primary); }
+.btn-outline:hover { background: #fff5f3; }
+.btn-sm { padding: 6px 14px; font-size: 13px; }
+.btn-danger { background: #e74c3c; color: white; }
+.btn-danger:hover { background: #c0392b; }
+
+/* Drop Zone */
+.drop-zone {
+  border: 2px dashed var(--border); border-radius: 12px; padding: 32px 20px;
+  text-align: center; cursor: pointer; transition: all 0.3s; background: #fafafa;
+}
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--primary); background: #fff5f3; }
+.drop-zone .icon { font-size: 36px; margin-bottom: 8px; }
+.drop-zone p { color: var(--text-secondary); font-size: 14px; }
+.drop-zone .hint { font-size: 12px; color: #999; margin-top: 4px; }
+
+/* File Tags */
+.file-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.file-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fff5f3; border: 1px solid var(--primary); border-radius: 20px;
+  padding: 6px 14px; font-size: 13px; color: var(--primary); font-weight: 500;
+}
+.file-tag .count { background: var(--primary); color: white; border-radius: 10px; padding: 1px 8px; font-size: 11px; }
+.file-tag .remove {
+  cursor: pointer; font-size: 16px; line-height: 1; opacity: 0.6;
+  margin-left: 2px;
+}
+.file-tag .remove:hover { opacity: 1; }
+
+/* Stats */
+.stats-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stat-card {
+  background: var(--card); border-radius: 10px; padding: 14px 18px;
+  flex: 1; min-width: 100px; box-shadow: var(--shadow);
+}
+.stat-card .label { font-size: 11px; color: var(--text-secondary); }
+.stat-card .value { font-size: 20px; font-weight: 700; color: var(--primary); margin-top: 2px; }
+
+/* Controls */
+.controls {
+  background: var(--card); border-radius: 12px; padding: 16px 20px;
+  margin-bottom: 20px; box-shadow: var(--shadow);
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.controls label { font-size: 13px; font-weight: 500; }
+.controls select, .controls input[type="number"] {
+  padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 13px; font-family: inherit; outline: none;
+}
+
+/* Post Cards */
+.post-card {
+  background: var(--card); border-radius: 12px; padding: 20px;
+  margin-bottom: 16px; box-shadow: var(--shadow); position: relative;
+  border-left: 4px solid var(--primary);
+}
+.post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.post-number {
+  background: var(--primary); color: white; width: 28px; height: 28px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.post-time { font-size: 13px; color: var(--text-secondary); background: #f0f0f0; padding: 4px 10px; border-radius: 20px; }
+.post-category { font-size: 11px; color: white; background: #8e44ad; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+.post-product {
+  font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;
+  padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;
+}
+.post-content {
+  font-size: 14px; line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+  background: #fafafa; padding: 14px; border-radius: 8px; margin-bottom: 12px; min-height: 80px;
+}
+.post-content.loading { display: flex; align-items: center; justify-content: center; color: var(--text-secondary); }
+.post-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.copy-feedback { font-size: 12px; color: var(--success); font-weight: 600; opacity: 0; transition: opacity 0.3s; }
+.copy-feedback.show { opacity: 1; }
+
+.commission-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.commission-high { background: #e8f5e9; color: #2e7d32; }
+.commission-mid { background: #fff3e0; color: #ef6c00; }
+.commission-low { background: #f5f5f5; color: #999; }
+
+.progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+.progress-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.3s; width: 0%; }
+.progress-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; text-align: center; }
+
+.hidden { display: none !important; }
+
+.summary-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
+.summary-table th { text-align: left; padding: 8px; background: #f5f5f5; border-bottom: 2px solid var(--border); }
+.summary-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; }
+.summary-table tr:hover { background: #fafafa; }
+
+@media (max-width: 600px) {
+  .api-row { flex-direction: column; }
+  .controls { flex-direction: column; align-items: stretch; }
+  .stats-bar { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span style="font-size:24px">🛒</span>
+  <h1>Shopee Post Generator</h1>
+</div>
+
+<div class="container">
+
+  <!-- API Key -->
+  <div class="section" id="apiSection">
+    <h2>🔑 Buoc 1: Gemini API Key</h2>
+    <div class="api-row">
+      <input type="password" id="apiKeyInput" placeholder="Paste API key tu aistudio.google.com...">
+      <button class="btn btn-primary" onclick="saveApiKey()">Luu</button>
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:8px;">Key chi luu trong browser cua ban.</p>
+  </div>
+
+  <!-- Upload -->
+  <div class="section" id="uploadSection">
+    <h2>📁 Buoc 2: Tai file CSV (co the tai nhieu file)</h2>
+    <div class="drop-zone" id="dropZone">
+      <div class="icon">📄</div>
+      <p>Keo tha file CSV vao day (nhieu file cung luc duoc)</p>
+      <p class="hint">VD: but_chi.csv, giay_nhap.csv, vo.csv ...</p>
+    </div>
+    <input type="file" id="fileInput" accept=".csv" style="display:none" multiple>
+    <div class="file-tags" id="fileTags"></div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section hidden" id="summarySection">
+    <h2>📊 Tong hop san pham</h2>
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-card"><div class="label">Tong SP</div><div class="value" id="statTotal">0</div></div>
+      <div class="stat-card"><div class="label">Danh muc</div><div class="value" id="statCategories">0</div></div>
+      <div class="stat-card"><div class="label">Hoa hong >5%</div><div class="value" id="statHigh">0</div></div>
+      <div class="stat-card"><div class="label">Trung lap</div><div class="value" id="statDuplicates">0</div></div>
+    </div>
+    <div id="categoryBreakdown"></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls hidden" id="controlsBar">
+    <label>So bai/ngay:</label>
+    <input type="number" id="postsPerDay" value="8" min="1" max="20" style="width:60px">
+    <label>Chien luoc:</label>
+    <select id="strategy">
+      <option value="smart">Thong minh (AI chon)</option>
+      <option value="commission">Hoa hong cao nhat</option>
+      <option value="sales">Ban chay nhat</option>
+      <option value="diverse">Da dang danh muc</option>
+    </select>
+    <button class="btn btn-primary" onclick="generatePosts()" id="generateBtn">✨ Tao bai viet</button>
+    <button class="btn btn-outline hidden" onclick="copyAllPosts()" id="copyAllBtn">📋 Copy tat ca</button>
+  </div>
+
+  <!-- Progress -->
+  <div class="hidden" id="progressSection">
+    <div class="progress-text" id="progressText">Dang tao caption...</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <!-- Posts -->
+  <div id="postsContainer"></div>
+</div>
+
+<script>
+const SCHEDULE_TIMES = ['07:00','09:00','11:30','13:00','15:00','17:00','19:00','20:30','21:30','22:00',
+  '07:30','08:30','10:00','12:00','14:00','16:00','18:00','19:30','21:00','22:30'];
+
+const CAPTION_STYLES = [
+  {name:'review', prompt:'Viet caption nhu mot nguoi dung that dang chia se trai nghiem mua san pham nay. Tu nhien, chan that, co cam xuc ca nhan.'},
+  {name:'deal', prompt:'Viet caption kieu thong bao deal soc, gia tot, gioi han. Tao cam giac khan cap de nguoi doc muon mua ngay.'},
+  {name:'question', prompt:'Viet caption bat dau bang cau hoi tuong tac (VD: "Ai con thieu X cho Y?"). Sau do gioi thieu san pham nhu goi y tu nhien.'},
+  {name:'tip', prompt:'Viet caption chia se meo/tip lien quan den san pham. Sau do gioi thieu san pham nhu cong cu ho tro.'},
+  {name:'compare', prompt:'Viet caption so sanh gia san pham nay voi mua o hieu sach/ngoai cho. Nhan manh gia online re hon.'},
+  {name:'story', prompt:'Viet caption ke mot cau chuyen ngan lien quan. Tu nhien dan den gioi thieu san pham.'},
+  {name:'list', prompt:'Viet caption dang list nhung ly do nen mua san pham nay. Dung emoji bullet. Ngan gon moi diem.'},
+  {name:'urgency', prompt:'Viet caption nhan manh so luong da ban va danh gia tot. Tao FOMO. Nhac nguoi doc mua som.'},
+];
+
+const CATEGORY_COLORS = ['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e67e22','#34495e','#e91e63','#00bcd4'];
+
+const DEFAULT_KEY = 'AIzaSyB_Z-FO1_s4bU4eRkkYKSJFNk4Y9Syxdu8';
+let apiKey = '';
+let allFiles = {};       // { filename: [products] }
+let allProducts = [];    // merged + deduplicated
+let generatedPosts = [];
+let usedStyleIdx = 0;
+
+document.addEventListener('DOMContentLoaded', function() {
+  try { const s = localStorage.getItem('gemini_api_key'); apiKey = s || DEFAULT_KEY; } catch(e) { apiKey = DEFAULT_KEY; }
+  const d = apiKey === DEFAULT_KEY ? '(Mac dinh)' : '\u2022'.repeat(12) + apiKey.slice(-4);
+  document.getElementById('apiKeyInput').value = d;
+  document.getElementById('apiSection').querySelector('h2').innerHTML = '\uD83D\uDD11 Buoc 1: API Key \u2705';
+});
+
+function saveApiKey() {
+  const k = document.getElementById('apiKeyInput').value.trim();
+  if (!k || k.startsWith('\u2022') || k === '(Mac dinh)') return;
+  apiKey = k;
+  try { localStorage.setItem('gemini_api_key', k); } catch(e) {}
+  document.getElementById('apiKeyInput').value = '\u2022'.repeat(12) + k.slice(-4);
+  document.getElementById('apiSection').querySelector('h2').innerHTML = '\uD83D\uDD11 Buoc 1: API Key \u2705';
+}
+
+// ===== FILE HANDLING =====
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(files) {
+  for (const file of files) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const prods = parseCSV(e.target.result, file.name);
+      if (prods.length > 0) {
+        allFiles[file.name] = prods;
+        refreshAll();
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+}
+
+function removeFile(name) {
+  delete allFiles[name];
+  refreshAll();
+}
+
+function refreshAll() {
+  renderFileTags();
+  mergeAndDeduplicate();
+  renderSummary();
+  document.getElementById('controlsBar').classList.toggle('hidden', allProducts.length === 0);
+  document.getElementById('summarySection').classList.toggle('hidden', allProducts.length === 0);
+}
+
+function renderFileTags() {
+  const container = document.getElementById('fileTags');
+  container.innerHTML = Object.entries(allFiles).map(([name, prods]) => {
+    const label = name.replace(/\.csv$/i, '').replace(/^L\u1ea5y link.*loat\d+.*?-/, '').substring(0, 30);
+    return `<div class="file-tag">
+      \uD83D\uDCC4 ${label} <span class="count">${prods.length} SP</span>
+      <span class="remove" onclick="removeFile('${name.replace(/'/g, "\\'")}')">&times;</span>
+    </div>`;
+  }).join('');
+}
+
+// ===== CSV PARSING =====
+function parseCSV(text, filename) {
+  const lines = text.split('\n').filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const category = guessCategory(filename, lines.slice(1, 5).join(' '));
+  const products = [];
+  for (let i = 1; i < lines.length; i++) {
+    const cols = parseCSVLine(lines[i]);
+    if (cols.length < 9 || !cols[0]) continue;
+    products.push({
+      id: cols[0],
+      name: cols[1],
+      price: parsePrice(cols[2]),
+      priceDisplay: cols[2],
+      sales: parseSales(cols[3]),
+      salesDisplay: cols[3] || '0',
+      shop: cols[4],
+      commission: parseFloat(cols[5].replace(',','.').replace('%','')) || 0,
+      commissionDisplay: cols[5],
+      commissionAmount: cols[6],
+      link: cols[7],
+      affiliateLink: cols[8],
+      category: category,
+      source: filename
+    });
+  }
+  return products;
+}
+
+function guessCategory(filename, sampleText) {
+  const text = (filename + ' ' + sampleText).toLowerCase();
+  const keywords = [
+    ['but chi','but_chi','pencil','but'], ['giay nhap','giay_nhap','giay in','paper','giay'],
+    ['vo','so tay','notebook','so nhap'], ['tay','eraser','gom'], ['thuoc ke','ruler','thuoc'],
+    ['but muc','but bi','pen','but gel'], ['keo','keo dan','glue'], ['bang keo','tape','bang dinh'],
+    ['mau ve','mau','color','crayon'], ['cap','balo','tui','bag'],
+  ];
+  const names = ['But chi','Giay','Vo/So','Tay/Gom','Thuoc','But muc','Keo','Bang keo','Mau ve','Cap/Balo'];
+  for (let i = 0; i < keywords.length; i++) {
+    if (keywords[i].some(k => text.includes(k))) return names[i];
+  }
+  return 'Khac';
+}
+
+function parseCSVLine(line) {
+  const result = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') inQ = !inQ;
+    else if (c === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+    else cur += c;
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function parsePrice(s) {
+  if (!s) return 0;
+  const n = s.replace(/[^\d.,]/g,'').replace(',','.');
+  const v = parseFloat(n);
+  return s.toLowerCase().includes('k') ? v * 1000 : (v || 0);
+}
+
+function parseSales(s) {
+  if (!s) return 0; s = s.trim();
+  if (/k\+?/i.test(s)) return parseFloat(s.replace(/[^\d.,]/g,'').replace(',','.')) * 1000;
+  return parseInt(s.replace(/[^\d]/g,'')) || 0;
+}
+
+// ===== MERGE & DEDUPLICATE =====
+function mergeAndDeduplicate() {
+  const all = Object.values(allFiles).flat();
+  const seen = new Set();
+  const unique = [];
+  let dupes = 0;
+  for (const p of all) {
+    if (seen.has(p.id)) { dupes++; continue; }
+    seen.add(p.id);
+    unique.push(p);
+  }
+  allProducts = unique;
+  allProducts._dupes = dupes;
+}
+
+// ===== SUMMARY =====
+function renderSummary() {
+  const prods = allProducts;
+  document.getElementById('statTotal').textContent = prods.length;
+  const cats = [...new Set(prods.map(p => p.category))];
+  document.getElementById('statCategories').textContent = cats.length;
+  document.getElementById('statHigh').textContent = prods.filter(p => p.commission > 5).length;
+  document.getElementById('statDuplicates').textContent = allProducts._dupes || 0;
+
+  let html = '<table class="summary-table"><tr><th>Danh muc</th><th>So SP</th><th>Hoa hong TB</th><th>SP ban chay nhat</th></tr>';
+  for (const cat of cats) {
+    const cp = prods.filter(p => p.category === cat);
+    const avgComm = (cp.reduce((s, p) => s + p.commission, 0) / cp.length).toFixed(1);
+    const best = cp.reduce((a, b) => a.sales > b.sales ? a : b);
+    html += `<tr><td><strong>${cat}</strong></td><td>${cp.length}</td><td>${avgComm}%</td><td>${best.name.substring(0, 40)}... (${best.salesDisplay})</td></tr>`;
+  }
+  html += '</table>';
+  document.getElementById('categoryBreakdown').innerHTML = html;
+}
+
+// ===== SMART PRODUCT SELECTION =====
+function selectProducts() {
+  const count = parseInt(document.getElementById('postsPerDay').value) || 8;
+  const strategy = document.getElementById('strategy').value;
+  let pool = [...allProducts];
+
+  if (strategy === 'commission') {
+    pool.sort((a, b) => b.commission - a.commission || b.sales - a.sales);
+    return pool.slice(0, count);
+  }
+  if (strategy === 'sales') {
+    pool.sort((a, b) => b.sales - a.sales);
+    return pool.slice(0, count);
+  }
+  if (strategy === 'diverse') {
+    return diverseSelect(pool, count);
+  }
+  // smart: score-based
+  return smartSelect(pool, count);
+}
+
+function smartSelect(pool, count) {
+  // Score = commission_weight + sales_weight + diversity_bonus
+  const maxSales = Math.max(...pool.map(p => p.sales), 1);
+  const maxComm = Math.max(...pool.map(p => p.commission), 1);
+
+  pool.forEach(p => {
+    p._score = (p.commission / maxComm) * 50 + (p.sales / maxSales) * 30 + Math.random() * 20;
+  });
+  pool.sort((a, b) => b._score - a._score);
+
+  // Ensure category diversity: don't pick more than ceil(count/categories) from same category
+  const cats = [...new Set(pool.map(p => p.category))];
+  const maxPerCat = Math.ceil(count / Math.max(cats.length, 1)) + 1;
+  const catCount = {};
+  const selected = [];
+
+  for (const p of pool) {
+    if (selected.length >= count) break;
+    catCount[p.category] = (catCount[p.category] || 0) + 1;
+    if (catCount[p.category] <= maxPerCat) selected.push(p);
+  }
+
+  // If not enough, fill from remaining
+  if (selected.length < count) {
+    for (const p of pool) {
+      if (selected.length >= count) break;
+      if (!selected.includes(p)) selected.push(p);
+    }
+  }
+
+  // Interleave categories for variety in feed
+  return interleaveCategories(selected);
+}
+
+function diverseSelect(pool, count) {
+  const cats = [...new Set(pool.map(p => p.category))];
+  const buckets = {};
+  cats.forEach(c => { buckets[c] = pool.filter(p => p.category === c).sort((a, b) => b.commission - a.commission); });
+
+  const selected = [];
+  let round = 0;
+  while (selected.length < count) {
+    let added = false;
+    for (const cat of cats) {
+      if (selected.length >= count) break;
+      if (buckets[cat][round]) { selected.push(buckets[cat][round]); added = true; }
+    }
+    if (!added) break;
+    round++;
+  }
+  return selected;
+}
+
+function interleaveCategories(arr) {
+  const byCat = {};
+  arr.forEach(p => { (byCat[p.category] = byCat[p.category] || []).push(p); });
+  const cats = Object.keys(byCat);
+  const result = [];
+  let round = 0;
+  while (result.length < arr.length) {
+    let added = false;
+    for (const c of cats) {
+      if (byCat[c][round]) { result.push(byCat[c][round]); added = true; }
+    }
+    if (!added) break;
+    round++;
+  }
+  return result;
+}
+
+// ===== GENERATE POSTS =====
+async function generatePosts() {
+  if (!apiKey) { alert('Nhap Gemini API Key truoc!'); return; }
+  if (allProducts.length === 0) { alert('Tai file CSV truoc!'); return; }
+
+  const selected = selectProducts();
+  const count = selected.length;
+
+  document.getElementById('generateBtn').disabled = true;
+  document.getElementById('generateBtn').textContent = 'Dang tao...';
+  document.getElementById('progressSection').classList.remove('hidden');
+  document.getElementById('copyAllBtn').classList.add('hidden');
+
+  const container = document.getElementById('postsContainer');
+  container.innerHTML = '';
+  generatedPosts = [];
+  usedStyleIdx = 0;
+
+  for (let i = 0; i < count; i++) {
+    const p = selected[i];
+    const time = SCHEDULE_TIMES[i % SCHEDULE_TIMES.length];
+    const commClass = p.commission >= 10 ? 'commission-high' : p.commission >= 5 ? 'commission-mid' : 'commission-low';
+    const catColor = CATEGORY_COLORS[[...new Set(allProducts.map(x => x.category))].indexOf(p.category) % CATEGORY_COLORS.length];
+
+    container.innerHTML += `
+      <div class="post-card" id="postCard${i}">
+        <div class="post-header">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <div class="post-number">${i + 1}</div>
+            <div class="post-time">\u23F0 ${time}</div>
+            <span class="post-category" style="background:${catColor}">${p.category}</span>
+            <span class="commission-badge ${commClass}">${p.commissionDisplay}</span>
+          </div>
+        </div>
+        <div class="post-product">
+          <strong>${truncate(p.name, 70)}</strong> — ${p.priceDisplay} — Shop: ${p.shop} — Da ban: ${p.salesDisplay}
+        </div>
+        <div class="post-content loading" id="postContent${i}">\u23F3 Dang viet caption...</div>
+        <div class="post-actions">
+          <button class="btn btn-primary btn-sm" onclick="copyPost(${i})">📋 Copy</button>
+          <button class="btn btn-outline btn-sm" onclick="regenPost(${i})">🔄 Viet lai</button>
+          <span class="copy-feedback" id="copyFb${i}">Da copy!</span>
+        </div>
+      </div>`;
+  }
+
+  for (let i = 0; i < count; i++) {
+    const style = CAPTION_STYLES[usedStyleIdx % CAPTION_STYLES.length];
+    usedStyleIdx++;
+    const product = selected[i];
+    const time = SCHEDULE_TIMES[i % SCHEDULE_TIMES.length];
+    updateProgress(i, count);
+
+    try {
+      const caption = await callGemini(product, style);
+      generatedPosts[i] = { product, caption, style, time };
+      const el = document.getElementById(`postContent${i}`);
+      el.classList.remove('loading'); el.textContent = caption;
+    } catch (err) {
+      const fb = fallbackCaption(product);
+      generatedPosts[i] = { product, caption: fb, style, time };
+      const el = document.getElementById(`postContent${i}`);
+      el.classList.remove('loading'); el.textContent = `[Loi: ${err.message}]\n\n${fb}`;
+    }
+    if (i < count - 1) await sleep(2000);
+  }
+
+  updateProgress(count, count);
+  document.getElementById('generateBtn').disabled = false;
+  document.getElementById('generateBtn').textContent = '\u2728 Tao bai viet';
+  document.getElementById('copyAllBtn').classList.remove('hidden');
+  document.getElementById('progressSection').classList.add('hidden');
+}
+
+async function callGemini(product, style) {
+  const prompt = `Ban la copywriter chuyen viet bai dang Facebook cho group san sale Shopee Viet Nam. Viet BANG TIENG VIET co dau.
+
+San pham:
+- Ten: ${product.name}
+- Gia: ${product.priceDisplay}
+- Shop: ${product.shop}
+- Da ban: ${product.salesDisplay}
+- Danh muc: ${product.category}
+- Link: ${product.affiliateLink}
+
+Yeu cau:
+- ${style.prompt}
+- Ket thuc bang link san pham (dung chinh xac link tren)
+- Do dai: 3-6 dong, toi da 500 ky tu
+- Dung emoji vua phai (2-4 emoji)
+- Them 2-3 hashtag cuoi (#shopee #sale ...)
+- KHONG dung tu "affiliate", "hoa hong", "kiem tien", "quang cao"
+- Viet tu nhien nhu nguoi binh thuong chia se deal trong group
+
+Chi tra ve caption, khong giai thich.`;
+
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.9, maxOutputTokens: 400 }
+    })
+  });
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error?.message || `API ${res.status}`); }
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('Khong nhan duoc caption');
+  return text.trim();
+}
+
+function fallbackCaption(p) {
+  return `\uD83D\uDD25 ${p.name}\n\n\uD83D\uDCB0 Gia: ${p.priceDisplay}\n\uD83C\uDFEA Shop: ${p.shop}\n\uD83D\uDCE6 Da ban: ${p.salesDisplay}\n\n\uD83D\uDED2 Mua ngay: ${p.affiliateLink}\n\n#shopee #sale #giamgia`;
+}
+
+async function regenPost(i) {
+  if (!generatedPosts[i]) return;
+  const { product } = generatedPosts[i];
+  const style = CAPTION_STYLES[Math.floor(Math.random() * CAPTION_STYLES.length)];
+  const el = document.getElementById(`postContent${i}`);
+  el.classList.add('loading'); el.textContent = '\u23F3 Dang viet lai...';
+  try {
+    const caption = await callGemini(product, style);
+    generatedPosts[i].caption = caption; generatedPosts[i].style = style;
+    el.classList.remove('loading'); el.textContent = caption;
+  } catch (err) { el.classList.remove('loading'); el.textContent = `[Loi: ${err.message}]`; }
+}
+
+function copyPost(i) {
+  if (!generatedPosts[i]) return;
+  navigator.clipboard.writeText(generatedPosts[i].caption).then(() => {
+    const fb = document.getElementById(`copyFb${i}`);
+    fb.classList.add('show'); setTimeout(() => fb.classList.remove('show'), 2000);
+  });
+}
+
+function copyAllPosts() {
+  const all = generatedPosts.filter(p => p)
+    .map((p, i) => `=== BAI ${i+1} | ${p.time} | ${p.product.category} ===\n\n${p.caption}\n`)
+    .join('\n' + '\u2500'.repeat(40) + '\n\n');
+  navigator.clipboard.writeText(all).then(() => {
+    const btn = document.getElementById('copyAllBtn');
+    btn.textContent = '\u2705 Da copy!'; setTimeout(() => { btn.textContent = '\uD83D\uDCCB Copy tat ca'; }, 2000);
+  });
+}
+
+function updateProgress(c, t) {
+  document.getElementById('progressFill').style.width = Math.round((c/t)*100) + '%';
+  document.getElementById('progressText').textContent = `Dang tao caption... ${c}/${t}`;
+}
+function truncate(s, m) { return s.length > m ? s.slice(0, m) + '...' : s; }
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+</script>
+</body>
+</html>
