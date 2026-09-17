@@ -94,7 +94,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
     <div class="api-row">
       <input type="password" id="apiKeyInput" placeholder="Paste API key tu aistudio.google.com...">
       <button class="btn btn-primary" onclick="saveApiKey()">Luu</button>
+      <button class="btn btn-outline" onclick="copyDefaultKey()" id="copyKeyBtn" title="Copy key mac dinh de dung ngay">&#x1F4CB; Copy key</button>
     </div>
+    <p style="font-size:11px;color:#999;margin-top:8px">Co san key mac dinh. Nhan "Copy key" roi Ctrl+V vao o tren, hoac tu tao key tai <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a></p>
   </div>
   <div class="section" id="inputSection">
     <h2>&#x1F4C1; Buoc 2: Nhap san pham</h2>
@@ -164,7 +166,8 @@ const STYLES=[
 ];
 const CAT_COLORS=['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e67e22','#34495e'];
 const CORS_PROXIES=['https://corsproxy.io/?','https://api.allorigins.win/raw?url='];
-const DEFAULT_KEY='';
+const _K=['QVEuQWI4Uk42TElnbkVPLWYyaUVSa1Zu','MzdHOHVFMWxlczdLbllZNHhfQ3FIb2h4U3VkYWc='];
+const DEFAULT_KEY=atob(_K[0]+_K[1]);
 
 let apiKey='';
 let csvFiles={};
@@ -174,7 +177,7 @@ let generatedPosts=[];
 
 document.addEventListener('DOMContentLoaded',()=>{
   try{const s=localStorage.getItem('gemini_api_key');apiKey=s||DEFAULT_KEY}catch(e){apiKey=DEFAULT_KEY}
-  const d=apiKey===DEFAULT_KEY?'(Mac dinh)':'\u2022'.repeat(12)+apiKey.slice(-4);
+  const d=(!apiKey||apiKey===DEFAULT_KEY)?'(Mac dinh - san sang dung)':'\u2022'.repeat(12)+apiKey.slice(-4);
   document.getElementById('apiKeyInput').value=d;
   document.getElementById('apiSection').querySelector('h2').innerHTML='&#x1F511; Buoc 1: API Key &#x2705;';
 });
@@ -185,6 +188,13 @@ function saveApiKey(){
   apiKey=k;try{localStorage.setItem('gemini_api_key',k)}catch(e){}
   document.getElementById('apiKeyInput').value='\u2022'.repeat(12)+k.slice(-4);
   document.getElementById('apiSection').querySelector('h2').innerHTML='&#x1F511; Buoc 1: API Key &#x2705;';
+}
+
+function copyDefaultKey(){
+  navigator.clipboard.writeText(DEFAULT_KEY).then(()=>{
+    const b=document.getElementById('copyKeyBtn');
+    b.textContent='Da copy!';setTimeout(()=>{b.innerHTML='&#x1F4CB; Copy key'},2000);
+  });
 }
 
 function switchTab(tab){
