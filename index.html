@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shopee Post Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root {
   --bg:#f5f5f5;--card:#fff;--primary:#EE4D2D;--primary-dark:#D73211;
@@ -92,16 +93,16 @@ input:focus,textarea:focus,select:focus{border-color:var(--primary)}
   <div class="section" id="inputSection">
     <h2>&#x1F4C1; Nhap san pham</h2>
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('csv')">&#x1F4C4; Upload CSV</div>
+      <div class="tab active" onclick="switchTab('csv')">&#x1F4C4; Upload File</div>
       <div class="tab" onclick="switchTab('links')">&#x1F517; Paste Link</div>
     </div>
     <div class="tab-content active" id="tabCsv">
       <div class="drop-zone" id="dropZone">
         <div class="icon">&#x1F4C4;</div>
-        <p>Keo tha file CSV vao day (nhieu file duoc)</p>
-        <p class="hint">VD: but_chi.csv, giay_nhap.csv, vo.csv ...</p>
+        <p>Keo tha file CSV / Excel vao day (nhieu file duoc)</p>
+        <p class="hint">Ho tro: .csv, .xlsx, .xls — file xuat tu Shopee Affiliate</p>
       </div>
-      <input type="file" id="fileInput" accept=".csv" style="display:none" multiple>
+      <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display:none" multiple>
       <div class="file-tags" id="fileTags"></div>
     </div>
     <div class="tab-content" id="tabLinks">
@@ -187,9 +188,24 @@ fileInput.addEventListener('change',e=>handleFiles(e.target.files));
 
 function handleFiles(files){
   for(const f of files){
-    const r=new FileReader();
-    r.onload=e=>{const p=parseCSV(e.target.result,f.name);if(p.length){csvFiles[f.name]=p;refreshAll()}};
-    r.readAsText(f,'UTF-8');
+    const isExcel=/\.xlsx?$/i.test(f.name);
+    if(isExcel){
+      const r=new FileReader();
+      r.onload=e=>{
+        try{
+          const wb=XLSX.read(e.target.result,{type:'array'});
+          const ws=wb.Sheets[wb.SheetNames[0]];
+          const csvText=XLSX.utils.sheet_to_csv(ws);
+          const p=parseCSV(csvText,f.name);
+          if(p.length){csvFiles[f.name]=p;refreshAll()}
+        }catch(err){alert('Loi doc file Excel: '+err.message)}
+      };
+      r.readAsArrayBuffer(f);
+    }else{
+      const r=new FileReader();
+      r.onload=e=>{const p=parseCSV(e.target.result,f.name);if(p.length){csvFiles[f.name]=p;refreshAll()}};
+      r.readAsText(f,'UTF-8');
+    }
   }
 }
 function removeFile(n){delete csvFiles[n];refreshAll()}
